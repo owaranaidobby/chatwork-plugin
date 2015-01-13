@@ -2,36 +2,42 @@ package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
 
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.BuildListener;
+import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.util.VariableResolver;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatworkPublisher extends Publisher {
+  private static final int MAX_COMMIT_MESSAGE_LENGTH = 50;
 
   private final String rid;
   private final String defaultMessage;
 
-  private static final Pattern pattern = Pattern.compile("\\$\\{(.+)\\}|\\$(.+)\\s?");
-  private AbstractBuild build;
-  //TODO:
-  private PrintStream logger;
+  private Boolean notifyOnSuccess;
+  private Boolean notifyOnFail;
+  private transient AbstractBuild build;
+  private transient BuildListener listener;
+
 
   // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
   @DataBoundConstructor
-  public ChatworkPublisher(String rid, String defaultMessage) {
+  public ChatworkPublisher(String rid, String defaultMessage, Boolean notifyOnSuccess, Boolean notifyOnFail) {
     this.rid = rid;
-
+    this.notifyOnSuccess = notifyOnSuccess;
+    this.notifyOnFail = notifyOnFail;
     this.defaultMessage = (defaultMessage != null) ? defaultMessage : "";
   }
 
@@ -45,76 +51,118 @@ public class ChatworkPublisher extends Publisher {
   public String getDefaultMessage() {
     return defaultMessage;
   }
+  
+  public Boolean getNotifyOnSuccess() {
+    return notifyOnSuccess;
+  }
+
+  public Boolean getNotifyOnFail() {
+    return notifyOnFail;
+  }
 
   @Override
   public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
-
-    Boolean result = true;
     this.build = build;
-    this.logger = listener.getLogger();
-    try {
+    this.listener = listener;
+    
+    if(this.build.getResult() == Result.SUCCESS && !this.notifyOnSuccess) {
+      return true;
+    }
+    if(this.build.getResult() == Result.FAILURE && !this.notifyOnFail) {
+      return true;
+    }
 
+    try {
       String message = createMessage();
 
-      ChatworkClient chatworkClient = new ChatworkClient(build, getDescriptor().getApikey(), getRid(), getDefaultMessage());
+      println("[ChatWork post message]");
+      println(message);
+
+      if (message == null) return false;
+
+      ChatworkClient chatworkClient = new ChatworkClient(build, getDescriptor().getApikey(), getDescriptor().getProxysv(), getDescriptor().getProxyport(), getRid(), getDefaultMessage());
       chatworkClient.sendMessage(message);
+
+      return true;
     } catch (Exception e) {
-      result = false;
-      listener.getLogger().println(e.getMessage());
+      e.printStackTrace(listener.getLogger());
+      return false;
     }
-    return result;
+  }
+
+  // print to build console
+  private void println(String message) {
+    this.listener.getLogger().println(message);
   }
 
   private String createMessage() throws Exception {
     String message = this.defaultMessage;
-    Matcher m = pattern.matcher(message);
-    while (m.find()) {
-      // If ${VARNAME} match found, return that group, else return $NoWhiteSpace group
-      String matches = (m.group(1) != null) ? m.group(1) : m.group(2);
 
-      String globalValue = getValue(matches);
-      if (globalValue != null) {
-        message = message.replaceAll(matches, globalValue);
-      }
-    }
-    return message;
-
-  }
-
-  private String getValue(String key) {
-    if (key == null) {
+    if(StringUtils.isBlank(message)){
       return null;
-    } else {
-      VariableResolver buildVariableResolver = build.getBuildVariableResolver();
-      Object defaultValue = buildVariableResolver.resolve(key);
-      return (defaultValue == null) ? "" : ("payload".equals(key)) ? analyzePayload(defaultValue.toString()) : defaultValue.toString();
     }
+
+    Map<String, String> extraVariables = createExtraVariables();
+    return BuildVariableUtil.resolve(message, build, listener, extraVariables);
   }
 
-  private String analyzePayload(String parameterDefinition) {
+  private Map<String, String> createExtraVariables() {
+    Map<String, String> variables = new HashMap<String, String>();
 
-    JSONObject json = JSONObject.fromObject(parameterDefinition);
-
-    //TODO: 設定画面で表示したい項目を選べるようにする
-    String compareUrl = json.getString("compare");
-    String pusher = json.getJSONObject("pusher").getString("name");
-    String repositoryName = json.getJSONObject("repository").getString("name");
-
-
-    StringBuilder message = new StringBuilder().append(String.format("%s pushed into %s,\n\n", pusher, repositoryName));
-
-    JSONArray commits = json.getJSONArray("commits");
-    int size = commits.size();
-    for (int i = 0; i < size; i++) {
-      JSONObject value = (JSONObject) commits.get(i);
-      // コミットメッセージが長くなりすぎることを考慮して文字長を50文字とする
-      String s = value.getString("message");
-      message.append(String.format("- %s \n", (s.length() > 50) ? s.substring(0, 50) + "..." : s));
+    VariableResolver<String> buildVariableResolver = build.getBuildVariableResolver();
+    String payloadJson = buildVariableResolver.resolve("payload");
+    if(StringUtils.isNotBlank(payloadJson)){
+      variables.put("PAYLOAD_SUMMARY", analyzePayload(payloadJson));
     }
 
-    message.append(String.format("\n%s", compareUrl));
-    return message.toString();
+    variables.put("BUILD_RESULT", build.getResult().toString());
 
+    return variables;
+  }
+
+  private static String analyzePayload(String payloadJson) {
+    JSONObject json;
+    try{
+      json = JSONObject.fromObject(payloadJson);
+
+    } catch (JSONException e){
+      // payloadJson is not json
+      return payloadJson;
+    }
+
+    if (json.has("action") && "opened".equals(json.getString("action"))) {
+      JSONObject pullRequest = json.getJSONObject("pull_request");
+      String title = pullRequest.getString("title");
+      String url = pullRequest.getString("html_url");
+      String repositoryName = json.getJSONObject("repository").getString("name");
+      String pusher = pullRequest.getJSONObject("user").getString("login");
+
+      StringBuilder message = new StringBuilder().append(String.format("%s created Pull Request into %s,\n", pusher, repositoryName));
+      message.append(String.format("\n%s", title));
+      message.append(String.format("\n%s", url));
+
+      return message.toString();
+
+    } else if(json.has("compare")){
+      String compareUrl = json.getString("compare");
+
+      String pusher = json.getJSONObject("pusher").getString("name");
+      String repositoryName = json.getJSONObject("repository").getString("name");
+      StringBuilder message = new StringBuilder().append(String.format("%s pushed into %s,\n", pusher, repositoryName));
+
+      JSONArray commits = json.getJSONArray("commits");
+      int size = commits.size();
+      for (int i = 0; i < size; i++) {
+        JSONObject value = (JSONObject) commits.get(i);
+        String s = value.getString("message");
+        message.append(String.format("- %s\n", (s.length() > MAX_COMMIT_MESSAGE_LENGTH) ? s.substring(0, MAX_COMMIT_MESSAGE_LENGTH) + "..." : s));
+      }
+      message.append(String.format("\n%s", compareUrl));
+
+      return message.toString();
+    }
+
+    return null;
   }
 
   @Override
@@ -144,6 +192,18 @@ public class ChatworkPublisher extends Publisher {
       return apikey;
     }
 
+    private String proxysv;
+
+    public String getProxysv() {
+      return proxysv;
+    }
+
+    private String proxyport;
+
+    public String getProxyport() {
+      return proxyport;
+    }
+
     public DescriptorImpl() {
       load();
     }
@@ -159,9 +219,10 @@ public class ChatworkPublisher extends Publisher {
     @Override
     public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
       apikey = formData.getString("apikey");
+      proxysv = formData.getString("proxysv");
+      proxyport = formData.getString("proxyport");
       save();
       return super.configure(req, formData);
     }
   }
 }
-
