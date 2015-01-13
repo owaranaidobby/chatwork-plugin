@@ -37,15 +37,15 @@ class ChatworkClientTest {
 
     @Betamax(tape=ChatworkClientTest.TAPE_NAME, mode = TapeMode.READ_ONLY, match = [MatchRule.host, MatchRule.path])
     @Test
-    void "メッセージが送信できること"(){
+    void "should send message"(){
       assert client.sendMessage("testMessage") == true
     }
 
     @Ignore
     @Betamax(tape=ChatworkClientTest.TAPE_NAME, mode = TapeMode.WRITE_ONLY, match = [MatchRule.host, MatchRule.path])
     @Test
-    void "ChatworkのAPIを叩いてレスポンスを保存する"(){
-      // TODO 実際に使う場合にはapiKeyとchannelIdに実際の値を設定してください
+    void "call ChatWork API and save response to src/test/resources/betamax/tapes/ChatWork_v1_POST_rooms_messages.yaml"(){
+      // TODO: If you want to use, set your actual apiKey and channelId
       client.sendMessage("testMessage")
     }
   }

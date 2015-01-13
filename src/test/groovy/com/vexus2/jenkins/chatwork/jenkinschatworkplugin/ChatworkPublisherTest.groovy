@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*
 class ChatworkPublisherTest {
   static class analyzePayload {
     @Test
-    void "PullRequestのメッセージが生成されること"(){
+    void "should create PullRequest message"(){
       // via. https://developer.github.com/v3/pulls/#get-a-single-pull-request
       String parameterDefinition = """
 {
@@ -34,7 +34,6 @@ class ChatworkPublisherTest {
 }
 """
 
-      // 末尾に改行コードがあると一致しなくなるのでtrimする
       String expected = """
 octocat created Pull Request into Hello-World,
 
@@ -46,7 +45,7 @@ https://github.com/octocat/Hello-World/pull/1
     }
 
     @Test
-    void "compareのメッセージが生成されること"(){
+    void "should create compare message"(){
       String parameterDefinition = """
 {
   "compare": "https://github.com/octocat/Hello-World/compare/master...topic",
@@ -63,7 +62,6 @@ https://github.com/octocat/Hello-World/pull/1
 }
 """
 
-      // 末尾に改行コードがあると一致しなくなるのでtrimする
       String expected = """
 octocat pushed into Hello-World,
 - 1st commit
@@ -76,7 +74,7 @@ https://github.com/octocat/Hello-World/compare/master...topic
     }
 
     @Test
-    void "PullRequestでもcompareない時はnullが返ること"(){
+    void "When neither PullRequest nor compare, should return null"(){
       // via. https://developer.github.com/v3/pulls/#get-a-single-pull-request
       String parameterDefinition = """
 {
