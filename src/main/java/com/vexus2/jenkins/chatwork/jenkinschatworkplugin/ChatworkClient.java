@@ -17,23 +17,23 @@ public class ChatworkClient {
   private final String proxySv;
   private final String proxyPort;
 
-  private final String channelId;
+  private final String roomId;
 
   private static final String API_URL = "https://api.chatwork.com/v1";
 
-  public ChatworkClient(String apiKey, String proxySv, String proxyPort, String channelId) {
+  public ChatworkClient(String apiKey, String proxySv, String proxyPort, String roomId) {
     this.apiKey = apiKey;
     this.proxySv = proxySv;
     this.proxyPort = proxyPort;
-    this.channelId = channelId;
+    this.roomId = roomId;
   }
 
   public boolean sendMessage(String message) throws IOException {
-    if (StringUtils.isEmpty(apiKey) || StringUtils.isEmpty(channelId)) {
-      throw new IllegalArgumentException("API Key or Channel ID is null");
+    if (StringUtils.isEmpty(apiKey) || StringUtils.isEmpty(roomId)) {
+      throw new IllegalArgumentException("API Key or Room ID is empty");
     }
 
-    String url = API_URL + "/rooms/" + this.channelId + "/messages";
+    String url = API_URL + "/rooms/" + this.roomId + "/messages";
     URL obj = new URL(url);
     HttpsURLConnection con;
 
