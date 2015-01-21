@@ -1,5 +1,17 @@
 # Changelog
 
+## [chatwork-0.6.2] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.6.2)
+#### 2015/01/21
+- *Merged pull-request:* Support variable to room id  [\#8](https://github.com/jenkinsci/chatwork-plugin/pull/8) ([sue445](https://github.com/sue445))
+
+- *Merged pull-request:* Refcatorings [\#7](https://github.com/jenkinsci/chatwork-plugin/pull/7) ([sue445](https://github.com/sue445))
+
+- *Merged pull-request:* englishnize [\#5](https://github.com/jenkinsci/chatwork-plugin/pull/5) ([sue445](https://github.com/sue445))
+
+- *Closed issue:* Write reference [\#4](https://github.com/jenkinsci/chatwork-plugin/issues/4)
+
+- *Closed issue:* Support variable to room id [\#6](https://github.com/jenkinsci/chatwork-plugin/issues/6)
+
 ## [chatwork-0.6.1] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.6.1)
 #### 2015/01/13
 ## [chatwork-0.5] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.5)
