@@ -85,7 +85,7 @@ https://github.com/octocat/Hello-World/compare/master...topic
     }
   }
 
-  static class createMessage {
+  static class resolveMessage {
     ChatworkPublisher publisher
     AbstractBuild mockBuild
 
@@ -264,7 +264,7 @@ Garen Torikian pushed into testing,
 https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a
 """.trim()
 
-      assert publisher.createMessage() == excepted
+      assert publisher.resolveMessage() == excepted
     }
   }
 }
