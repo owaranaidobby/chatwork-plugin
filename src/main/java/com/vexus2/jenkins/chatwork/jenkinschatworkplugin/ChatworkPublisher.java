@@ -82,7 +82,7 @@ public class ChatworkPublisher extends Publisher {
     }
 
     try {
-      ChatworkClient chatworkClient = new ChatworkClient(getDescriptor().getApikey(), getDescriptor().getProxysv(), getDescriptor().getProxyport(), getRid());
+      ChatworkClient chatworkClient = new ChatworkClient(getDescriptor().getApikey(), getDescriptor().getProxysv(), getDescriptor().getProxyport(), resolveRoomId());
       chatworkClient.sendMessage(message);
 
       return true;
@@ -99,6 +99,10 @@ public class ChatworkPublisher extends Publisher {
 
   private String resolveMessage() {
     return resolve(this.defaultMessage);
+  }
+
+  private String resolveRoomId() {
+    return resolve(this.rid);
   }
 
   private String resolve(String message) {
