@@ -1,16 +1,14 @@
 package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
 
-import hudson.model.AbstractBuild;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.Proxy;
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.lang.Integer;
+import java.net.Proxy;
+import java.net.URL;
 
 public class ChatworkClient {
 
@@ -21,34 +19,27 @@ public class ChatworkClient {
 
   private final String channelId;
 
-  private final AbstractBuild build;
-
-  private final String defaultMessage;
-
   private static final String API_URL = "https://api.chatwork.com/v1";
 
-  public ChatworkClient(AbstractBuild build, String apiKey, String proxySv, String proxyPort, String channelId, String defaultMessage) {
-    this.build = build;
+  public ChatworkClient(String apiKey, String proxySv, String proxyPort, String channelId) {
     this.apiKey = apiKey;
     this.proxySv = proxySv;
     this.proxyPort = proxyPort;
     this.channelId = channelId;
-    this.defaultMessage = defaultMessage;
   }
 
-  public boolean sendMessage(String message) throws Exception {
-    if (this.build == null || this.apiKey == null || this.channelId == null) {
-      throw new Exception("API Key or Channel ID is null");
+  public boolean sendMessage(String message) throws IOException {
+    if (StringUtils.isEmpty(apiKey) || StringUtils.isEmpty(channelId)) {
+      throw new IllegalArgumentException("API Key or Channel ID is null");
     }
 
     String url = API_URL + "/rooms/" + this.channelId + "/messages";
     URL obj = new URL(url);
     HttpsURLConnection con;
 
-    if (this.proxySv.equals("NOPROXY")) {
+    if (StringUtils.equals(this.proxySv, "NOPROXY")) {
       con = (HttpsURLConnection) obj.openConnection();
-    }
-    else {
+    } else {
       Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxySv, Integer.parseInt(this.proxyPort)));
       con = (HttpsURLConnection) obj.openConnection(proxy);
     }
@@ -75,27 +66,9 @@ public class ChatworkClient {
 
     int responseCode = con.getResponseCode();
     if (responseCode != 200) {
-      throw new Exception("Response is not valid. Check your API Key or Chatwork API status. response_code = " + responseCode + ", message = " + con.getResponseMessage());
-    }
-
-    BufferedReader in = new BufferedReader(
-        new InputStreamReader(con.getInputStream()));
-    try {
-      String inputLine;
-      StringBuilder response = new StringBuilder();
-
-      while ((inputLine = in.readLine()) != null) {
-        response.append(inputLine);
-      }
-
-    } finally {
-      IOUtils.closeQuietly(in);
-
+      throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + responseCode + ", message = " + con.getResponseMessage());
     }
 
     return true;
   }
-
-
-
 }

@@ -4,15 +4,12 @@ import co.freeside.betamax.Betamax
 import co.freeside.betamax.MatchRule
 import co.freeside.betamax.Recorder
 import co.freeside.betamax.TapeMode
-import hudson.model.AbstractBuild
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
-
-import static org.mockito.Mockito.*
 
 @RunWith(Enclosed)
 class ChatworkClientTest {
@@ -26,13 +23,11 @@ class ChatworkClientTest {
 
     @Before
     void setUp(){
-      AbstractBuild build = mock(AbstractBuild)
       String apiKey = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       String proxySv = "NOPROXY"
       String proxyPort = "80"
       String channelId = "00000000"
-      String defaultMessage = "defaultMessage"
-      client = new ChatworkClient(build, apiKey, proxySv, proxyPort, channelId, defaultMessage)
+      client = new ChatworkClient(apiKey, proxySv, proxyPort, channelId)
     }
 
     @Betamax(tape=ChatworkClientTest.TAPE_NAME, mode = TapeMode.READ_ONLY, match = [MatchRule.host, MatchRule.path])
