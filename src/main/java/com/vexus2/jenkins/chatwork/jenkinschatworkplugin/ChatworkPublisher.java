@@ -76,23 +76,29 @@ public class ChatworkPublisher extends Publisher {
   }
 
   public String getSuccessfulMessage() {
-    return successfulMessage;
+    return getMessageWithDefault(successfulMessage);
   }
 
   public String getFailureMessage() {
-    return failureMessage;
+    return getMessageWithDefault(failureMessage);
   }
 
   public String getUnstableMessage() {
-    return unstableMessage;
+    return getMessageWithDefault(unstableMessage);
   }
 
   public String getNotBuiltMessage() {
-    return notBuiltMessage;
+    return getMessageWithDefault(notBuiltMessage);
   }
 
   public String getAbortedMessage() {
-    return abortedMessage;
+    return getMessageWithDefault(abortedMessage);
+  }
+
+  private String getMessageWithDefault(String message){
+    // NOTE: backward compatibility
+    // if message is null, this plugin upgraded from <= v0.6.2
+    return message == null ? defaultMessage : message;
   }
 
   public Boolean getNotifyOnSuccess() {
