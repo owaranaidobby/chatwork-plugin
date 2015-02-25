@@ -1,26 +1,24 @@
 package com.vexus2.jenkins.chatwork.jenkinschatworkplugin
-
 import hudson.EnvVars
 import hudson.model.AbstractBuild
 import hudson.model.Result
 import hudson.model.TaskListener
-import org.junit.Before
-import org.junit.Test
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
+import spock.lang.Specification
 
-import static org.mockito.Matchers.any
+import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
 
 @RunWith(Enclosed)
-class ChatworkPublisherTest {
+class ChatworkPublisherSpec {
   static String readFixture(String fileName){
-    ChatworkPublisherTest.class.getClassLoader().getResource("com/vexus2/jenkins/chatwork/jenkinschatworkplugin/${fileName}").getText()
+    ChatworkPublisherSpec.class.getClassLoader().getResource("com/vexus2/jenkins/chatwork/jenkinschatworkplugin/${fileName}").getText()
   }
 
-  static class analyzePayload {
-    @Test
-    void "should create PullRequest message"(){
+  static class analyzePayload extends Specification {
+    def "should create PullRequest message"() {
+      when:
       // via. https://developer.github.com/v3/pulls/#get-a-single-pull-request
       String parameterDefinition = readFixture("payload_PullRequest.json")
 
@@ -31,11 +29,12 @@ new-feature
 https://github.com/octocat/Hello-World/pull/1
 """.trim()
 
-      assert ChatworkPublisher.analyzePayload(parameterDefinition) == expected
+      then:
+      ChatworkPublisher.analyzePayload(parameterDefinition) == expected
     }
 
-    @Test
-    void "should create compare message"(){
+    def "should create compare message"() {
+      when:
       String parameterDefinition = readFixture("payload_compare.json")
 
       String expected = """
@@ -46,21 +45,23 @@ octocat pushed into Hello-World,
 https://github.com/octocat/Hello-World/compare/master...topic
 """.trim()
 
-      assert ChatworkPublisher.analyzePayload(parameterDefinition) == expected
+      then:
+      ChatworkPublisher.analyzePayload(parameterDefinition) == expected
     }
 
-    @Test
-    void "When neither PullRequest nor compare, should return null"(){
+    def "When neither PullRequest nor compare, should return null"(){
+      when:
       String parameterDefinition = readFixture("payload_empty.json")
-      assert ChatworkPublisher.analyzePayload(parameterDefinition) == null
+
+      then:
+      ChatworkPublisher.analyzePayload(parameterDefinition) == null
     }
   }
 
-  static class resolveMessage {
+  static class resolveMessage extends Specification {
     ChatworkPublisher publisher
 
-    @Before
-    void setUp(){
+    def setup(){
       // via. https://gist.github.com/gjtorikian/5171861
       String payload = readFixture("payload_webhook.json")
       publisher = new ChatworkPublisherBuilder().rid("00000000").
@@ -74,8 +75,8 @@ https://github.com/octocat/Hello-World/compare/master...topic
       publisher.build = mockBuild
     }
 
-    @Test
-    void "When contains payload param, should resolve payload"(){
+    def "When contains payload param, should resolve payload"(){
+      when:
       String excepted = """
 Garen Torikian pushed into testing,
 - Test
@@ -85,7 +86,8 @@ Garen Torikian pushed into testing,
 https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a
 """.trim()
 
-      assert publisher.resolveMessage() == excepted
+      then:
+      publisher.resolveMessage() == excepted
     }
   }
 }
