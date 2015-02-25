@@ -173,7 +173,23 @@ public class ChatworkPublisher extends Publisher {
   }
 
   private String resolveMessage() {
-    return resolve(this.defaultMessage);
+    return resolve(getBuildMessage(build.getResult()));
+  }
+
+  private String getBuildMessage(Result result) {
+    if(result == Result.SUCCESS){
+      return getSuccessfulMessage();
+    } else if(result == Result.FAILURE){
+      return getFailureMessage();
+    } else if(result == Result.UNSTABLE){
+      return getUnstableMessage();
+    } else if(result == Result.NOT_BUILT){
+      return getNotBuiltMessage();
+    } else if(result == Result.ABORTED){
+      return getAbortedMessage();
+    }
+
+    return this.defaultMessage;
   }
 
   private String resolveRoomId() {

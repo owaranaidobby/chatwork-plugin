@@ -6,6 +6,7 @@ import hudson.model.TaskListener
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import static org.mockito.Matchers.*
 import static org.mockito.Mockito.*
@@ -65,7 +66,7 @@ https://github.com/octocat/Hello-World/compare/master...topic
       // via. https://gist.github.com/gjtorikian/5171861
       String payload = readFixture("payload_webhook.json")
       publisher = new ChatworkPublisherBuilder().rid("00000000").
-          defaultMessage('$PAYLOAD_SUMMARY').notifyOnSuccess(true).notifyOnFail(true).build()
+          successfulMessage('$PAYLOAD_SUMMARY').notifyOnSuccess(true).notifyOnFail(true).build()
 
       AbstractBuild mockBuild = mock(AbstractBuild)
       when(mockBuild.getBuildVariables()).thenReturn(['payload': payload])
@@ -88,6 +89,31 @@ https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a
 
       then:
       publisher.resolveMessage() == excepted
+    }
+  }
+
+  static class getBuildMessage extends Specification {
+    @Unroll
+    def "should return message"(){
+      setup:
+      ChatworkPublisher publisher = new ChatworkPublisherBuilder().
+          successfulMessage("successfulMessage").
+          failureMessage("failureMessage").
+          unstableMessage("unstableMessage").
+          notBuiltMessage("notBuiltMessage").
+          abortedMessage("abortedMessage").
+          build()
+
+      expect:
+      publisher.getBuildMessage(result) == expected
+
+      where:
+      result           | expected
+      Result.SUCCESS   | "successfulMessage"
+      Result.FAILURE   | "failureMessage"
+      Result.UNSTABLE  | "unstableMessage"
+      Result.NOT_BUILT | "notBuiltMessage"
+      Result.ABORTED   | "abortedMessage"
     }
   }
 }
