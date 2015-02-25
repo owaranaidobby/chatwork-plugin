@@ -63,12 +63,8 @@ https://github.com/octocat/Hello-World/compare/master...topic
     void setUp(){
       // via. https://gist.github.com/gjtorikian/5171861
       String payload = readFixture("payload_webhook.json")
-
-      String roomId = "00000000"
-      String defaultMessage = '$PAYLOAD_SUMMARY'
-      boolean notifyOnSuccess = true
-      boolean notifyOnFail = true
-      publisher = new ChatworkPublisher(roomId, defaultMessage, notifyOnSuccess, notifyOnFail)
+      publisher = new ChatworkPublisherBuilder().rid("00000000").
+          defaultMessage('$PAYLOAD_SUMMARY').notifyOnSuccess(true).notifyOnFail(true).build()
 
       AbstractBuild mockBuild = mock(AbstractBuild)
       when(mockBuild.getBuildVariables()).thenReturn(['payload': payload])

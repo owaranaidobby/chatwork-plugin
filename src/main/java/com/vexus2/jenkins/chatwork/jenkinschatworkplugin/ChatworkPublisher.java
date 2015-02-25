@@ -24,21 +24,43 @@ public class ChatworkPublisher extends Publisher {
   private static final int MAX_COMMIT_MESSAGE_LENGTH = 50;
 
   private final String rid;
+
+  @Deprecated
   private final String defaultMessage;
 
-  private Boolean notifyOnSuccess;
-  private Boolean notifyOnFail;
+  private final String successfulMessage;
+  private final String failureMessage;
+  private final String unstableMessage;
+  private final String notBuiltMessage;
+  private final String abortedMessage;
+
+  private final Boolean notifyOnSuccess;
+  private final Boolean notifyOnFail;
+  private final Boolean notifyOnUnstable;
+  private final Boolean notifyOnNotBuilt;
+  private final Boolean notifyOnAborted;
+
   private transient AbstractBuild build;
   private transient BuildListener listener;
 
 
   // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
   @DataBoundConstructor
-  public ChatworkPublisher(String rid, String defaultMessage, Boolean notifyOnSuccess, Boolean notifyOnFail) {
+  public ChatworkPublisher(String rid, String defaultMessage, Boolean notifyOnSuccess, Boolean notifyOnFail, String unstableMessage, String notBuiltMessage, String abortedMessage, String successfulMessage, String failureMessage, Boolean notifyOnUnstable, Boolean notifyOnNotBuilt, Boolean notifyOnAborted) {
     this.rid = rid;
-    this.notifyOnSuccess = notifyOnSuccess;
-    this.notifyOnFail = notifyOnFail;
     this.defaultMessage = StringUtils.trimToEmpty(defaultMessage);
+
+    this.successfulMessage = StringUtils.trimToEmpty(successfulMessage);
+    this.failureMessage    = StringUtils.trimToEmpty(failureMessage);
+    this.unstableMessage   = StringUtils.trimToEmpty(unstableMessage);
+    this.notBuiltMessage   = StringUtils.trimToEmpty(notBuiltMessage);
+    this.abortedMessage    = StringUtils.trimToEmpty(abortedMessage);
+
+    this.notifyOnSuccess  = notifyOnSuccess;
+    this.notifyOnFail     = notifyOnFail;
+    this.notifyOnUnstable = notifyOnUnstable;
+    this.notifyOnNotBuilt = notifyOnNotBuilt;
+    this.notifyOnAborted  = notifyOnAborted;
   }
 
   /**
@@ -48,10 +70,31 @@ public class ChatworkPublisher extends Publisher {
     return rid;
   }
 
+  @Deprecated
   public String getDefaultMessage() {
     return defaultMessage;
   }
-  
+
+  public String getSuccessfulMessage() {
+    return successfulMessage;
+  }
+
+  public String getFailureMessage() {
+    return failureMessage;
+  }
+
+  public String getUnstableMessage() {
+    return unstableMessage;
+  }
+
+  public String getNotBuiltMessage() {
+    return notBuiltMessage;
+  }
+
+  public String getAbortedMessage() {
+    return abortedMessage;
+  }
+
   public Boolean getNotifyOnSuccess() {
     return notifyOnSuccess;
   }
@@ -60,15 +103,41 @@ public class ChatworkPublisher extends Publisher {
     return notifyOnFail;
   }
 
+  public Boolean getNotifyOnUnstable() {
+    return notifyOnUnstable;
+  }
+
+  public Boolean getNotifyOnNotBuilt() {
+    return notifyOnNotBuilt;
+  }
+
+  public Boolean getNotifyOnAborted() {
+    return notifyOnAborted;
+  }
+
   @Override
   public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
     this.build = build;
     this.listener = listener;
     
     if(this.build.getResult() == Result.SUCCESS && !this.notifyOnSuccess) {
+      println("skip post message because notifyOnSuccess is disabled");
       return true;
     }
     if(this.build.getResult() == Result.FAILURE && !this.notifyOnFail) {
+      println("skip post message because notifyOnFail is disabled");
+      return true;
+    }
+    if(this.build.getResult() == Result.UNSTABLE && !this.notifyOnUnstable) {
+      println("skip post message because notifyOnUnstable is disabled");
+      return true;
+    }
+    if(this.build.getResult() == Result.NOT_BUILT && !this.notifyOnNotBuilt) {
+      println("skip post message because notifyOnNotBuilt is disabled");
+      return true;
+    }
+    if(this.build.getResult() == Result.ABORTED && !this.notifyOnAborted) {
+      println("skip post message because notifyOnAborted is disabled");
       return true;
     }
 
