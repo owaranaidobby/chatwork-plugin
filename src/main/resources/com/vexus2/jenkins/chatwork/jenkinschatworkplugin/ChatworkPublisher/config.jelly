@@ -4,35 +4,40 @@
     <f:textbox/>
   </f:entry>
 
-  <f:entry title="Successful message" field="successfulMessage">
+  <f:entry title="Successful message" field="successfulMessage"
+      description="If 'Successful message' is blank, used 'Global Successful message'">
     <f:textarea/>
   </f:entry>
   <f:entry title="notify on build success" field="notifyOnSuccess">
     <f:checkbox/>
   </f:entry>
 
-  <f:entry title="Failure message" field="failureMessage">
+  <f:entry title="Failure message" field="failureMessage"
+      description="If 'Failure message' is blank, used 'Global Failure message'">
     <f:textarea/>
   </f:entry>
   <f:entry title="notify on build failure" field="notifyOnFail">
     <f:checkbox/>
   </f:entry>
 
-  <f:entry title="Unstable message" field="unstableMessage">
+  <f:entry title="Unstable message" field="unstableMessage"
+      description="If 'Unstable message' is blank, used 'Global Unstable message'">
     <f:textarea/>
   </f:entry>
   <f:entry title="notify on build unstable" field="notifyOnUnstable">
     <f:checkbox/>
   </f:entry>
 
-  <f:entry title="Not built message" field="notBuiltMessage">
+  <f:entry title="Not built message" field="notBuiltMessage"
+      description="If 'Not built message' is blank, used 'Global Not built message'">
     <f:textarea/>
   </f:entry>
   <f:entry title="notify on build not built" field="notifyOnNotBuilt">
     <f:checkbox/>
   </f:entry>
 
-  <f:entry title="Aborted message" field="abortedMessage">
+  <f:entry title="Aborted message" field="abortedMessage"
+      description="If 'Aborted message' is blank, used 'Global Aborted message'">
     <f:textarea/>
   </f:entry>
   <f:entry title="notify on build aborted" field="notifyOnAborted">

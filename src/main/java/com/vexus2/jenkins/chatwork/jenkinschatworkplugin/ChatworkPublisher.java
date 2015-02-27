@@ -173,7 +173,15 @@ public class ChatworkPublisher extends Publisher {
   }
 
   private String resolveMessage() {
-    return resolve(getJobResultMessage(build.getResult()));
+    String jobResultMessage = getJobResultMessage(build.getResult());
+    
+    if(StringUtils.isBlank(jobResultMessage)){
+      String globalResultMessage = getDescriptor().getGlobalResultMessage(build.getResult());
+      return resolve(globalResultMessage);
+
+    } else{
+      return resolve(jobResultMessage);
+    }
   }
 
   private String getJobResultMessage(Result result) {
