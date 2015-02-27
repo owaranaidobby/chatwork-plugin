@@ -360,5 +360,20 @@ public class ChatworkPublisher extends Publisher {
       save();
       return super.configure(req, formData);
     }
+    
+    public String getGlobalResultMessage(Result result){
+      if(result == Result.SUCCESS){
+        return getGlobalSuccessfulMessage();
+      } else if(result == Result.FAILURE){
+        return getGlobalFailureMessage();
+      } else if(result == Result.UNSTABLE){
+        return getGlobalUnstableMessage();
+      } else if(result == Result.NOT_BUILT){
+        return getGlobalNotBuiltMessage();
+      } else if(result == Result.ABORTED){
+        return getGlobalAbortedMessage();
+      }
+      return "";
+    }
   }
 }
