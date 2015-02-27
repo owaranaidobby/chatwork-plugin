@@ -25,6 +25,21 @@
       description="Set your Proxy port">
       <f:textbox />
     </f:entry>
-      <!--TODO: relation GitHub User <-> Chatwork ID-->
+
+    <f:entry title="Global Successful message" field="globalSuccessfulMessage">
+      <f:textarea/>
+    </f:entry>
+    <f:entry title="Global Failure message" field="globalFailureMessage">
+      <f:textarea/>
+    </f:entry>
+    <f:entry title="Global Unstable message" field="globalUnstableMessage">
+      <f:textarea/>
+    </f:entry>
+    <f:entry title="Global Not built message" field="globalNotBuiltMessage">
+      <f:textarea/>
+    </f:entry>
+    <f:entry title="Global Aborted message" field="globalAbortedMessage">
+      <f:textarea/>
+    </f:entry>
   </f:section>
 </j:jelly>
