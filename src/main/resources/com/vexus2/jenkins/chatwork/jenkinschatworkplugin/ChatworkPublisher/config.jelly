@@ -1,28 +1,41 @@
-<j:jelly xmlns:j="jelly:core"
-         xmlns:st="jelly:stapler"
-         xmlns:d="jelly:define"
-         xmlns:l="/lib/layout"
-         xmlns:t="/lib/hudson"
-         xmlns:f="/lib/form">
-    <f:entry
-            title="Chatwork Room ID"
-            field="rid"
-            description="Set Room ID you want to notice">
-        <f:textbox/>
-    </f:entry>
-    <f:entry
-            title="Default message"
-            field="defaultMessage">
-        <f:textarea/>
-    </f:entry>
-    <f:entry
-            title="notify on build success"
-            field="notifyOnSuccess">
-        <f:checkbox/>
-    </f:entry>
-    <f:entry
-            title="notify on build fail"
-            field="notifyOnFail">
-        <f:checkbox/>
-    </f:entry>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+  xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:entry title="Chatwork Room ID" field="rid" description="Set Room ID you want to notice">
+    <f:textbox/>
+  </f:entry>
+
+  <f:entry title="Successful message" field="successfulMessage">
+    <f:textarea/>
+  </f:entry>
+  <f:entry title="notify on build success" field="notifyOnSuccess">
+    <f:checkbox/>
+  </f:entry>
+
+  <f:entry title="Failure message" field="failureMessage">
+    <f:textarea/>
+  </f:entry>
+  <f:entry title="notify on build failure" field="notifyOnFail">
+    <f:checkbox/>
+  </f:entry>
+
+  <f:entry title="Unstable message" field="unstableMessage">
+    <f:textarea/>
+  </f:entry>
+  <f:entry title="notify on build unstable" field="notifyOnUnstable">
+    <f:checkbox/>
+  </f:entry>
+
+  <f:entry title="Not built message" field="notBuiltMessage">
+    <f:textarea/>
+  </f:entry>
+  <f:entry title="notify on build not built" field="notifyOnNotBuilt">
+    <f:checkbox/>
+  </f:entry>
+
+  <f:entry title="Aborted message" field="abortedMessage">
+    <f:textarea/>
+  </f:entry>
+  <f:entry title="notify on build aborted" field="notifyOnAborted">
+    <f:checkbox/>
+  </f:entry>
 </j:jelly>
