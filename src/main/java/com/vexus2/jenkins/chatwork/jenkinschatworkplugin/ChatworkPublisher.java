@@ -302,6 +302,36 @@ public class ChatworkPublisher extends Publisher {
     public String getProxyport() {
       return proxyport;
     }
+    
+    private String globalSuccessfulMessage;
+
+    private String globalFailureMessage;
+
+    private String globalUnstableMessage;
+
+    private String globalNotBuiltMessage;
+
+    private String globalAbortedMessage;
+
+    public String getGlobalSuccessfulMessage() {
+      return globalSuccessfulMessage;
+    }
+
+    public String getGlobalFailureMessage() {
+      return globalFailureMessage;
+    }
+
+    public String getGlobalUnstableMessage() {
+      return globalUnstableMessage;
+    }
+
+    public String getGlobalNotBuiltMessage() {
+      return globalNotBuiltMessage;
+    }
+
+    public String getGlobalAbortedMessage() {
+      return globalAbortedMessage;
+    }
 
     public DescriptorImpl() {
       load();
@@ -320,6 +350,13 @@ public class ChatworkPublisher extends Publisher {
       apikey = formData.getString("apikey");
       proxysv = formData.getString("proxysv");
       proxyport = formData.getString("proxyport");
+
+      globalSuccessfulMessage = formData.getString("globalSuccessfulMessage");
+      globalFailureMessage    = formData.getString("globalFailureMessage");
+      globalUnstableMessage   = formData.getString("globalUnstableMessage");
+      globalNotBuiltMessage   = formData.getString("globalNotBuiltMessage");
+      globalAbortedMessage    = formData.getString("globalAbortedMessage");
+
       save();
       return super.configure(req, formData);
     }
