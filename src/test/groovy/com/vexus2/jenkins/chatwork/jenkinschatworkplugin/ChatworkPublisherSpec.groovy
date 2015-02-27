@@ -92,7 +92,7 @@ https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a
     }
   }
 
-  static class getBuildMessage extends Specification {
+  static class getJobResultMessage extends Specification {
     @Unroll
     def "should return message"(){
       setup:
@@ -105,7 +105,7 @@ https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a
           build()
 
       expect:
-      publisher.getBuildMessage(result) == expected
+      publisher.getJobResultMessage(result) == expected
 
       where:
       result           | expected

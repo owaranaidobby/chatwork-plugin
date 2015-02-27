@@ -173,10 +173,10 @@ public class ChatworkPublisher extends Publisher {
   }
 
   private String resolveMessage() {
-    return resolve(getBuildMessage(build.getResult()));
+    return resolve(getJobResultMessage(build.getResult()));
   }
 
-  private String getBuildMessage(Result result) {
+  private String getJobResultMessage(Result result) {
     if(result == Result.SUCCESS){
       return getSuccessfulMessage();
     } else if(result == Result.FAILURE){
