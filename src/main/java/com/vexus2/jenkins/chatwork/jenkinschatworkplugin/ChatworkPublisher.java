@@ -28,7 +28,7 @@ public class ChatworkPublisher extends Publisher {
   @Deprecated
   private final String defaultMessage;
 
-  private final String successfulMessage;
+  private final String successMessage;
   private final String failureMessage;
   private final String unstableMessage;
   private final String notBuiltMessage;
@@ -46,11 +46,11 @@ public class ChatworkPublisher extends Publisher {
 
   // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
   @DataBoundConstructor
-  public ChatworkPublisher(String rid, String defaultMessage, Boolean notifyOnSuccess, Boolean notifyOnFail, String unstableMessage, String notBuiltMessage, String abortedMessage, String successfulMessage, String failureMessage, Boolean notifyOnUnstable, Boolean notifyOnNotBuilt, Boolean notifyOnAborted) {
+  public ChatworkPublisher(String rid, String defaultMessage, Boolean notifyOnSuccess, Boolean notifyOnFail, String unstableMessage, String notBuiltMessage, String abortedMessage, String successMessage, String failureMessage, Boolean notifyOnUnstable, Boolean notifyOnNotBuilt, Boolean notifyOnAborted) {
     this.rid = rid;
     this.defaultMessage = StringUtils.trimToEmpty(defaultMessage);
 
-    this.successfulMessage = StringUtils.trimToEmpty(successfulMessage);
+    this.successMessage    = StringUtils.trimToEmpty(successMessage);
     this.failureMessage    = StringUtils.trimToEmpty(failureMessage);
     this.unstableMessage   = StringUtils.trimToEmpty(unstableMessage);
     this.notBuiltMessage   = StringUtils.trimToEmpty(notBuiltMessage);
@@ -75,8 +75,8 @@ public class ChatworkPublisher extends Publisher {
     return defaultMessage;
   }
 
-  public String getSuccessfulMessage() {
-    return getMessageWithDefault(successfulMessage);
+  public String getSuccessMessage() {
+    return getMessageWithDefault(successMessage);
   }
 
   public String getFailureMessage() {
@@ -186,7 +186,7 @@ public class ChatworkPublisher extends Publisher {
 
   private String getJobResultMessage(Result result) {
     if(result == Result.SUCCESS){
-      return getSuccessfulMessage();
+      return getSuccessMessage();
     } else if(result == Result.FAILURE){
       return getFailureMessage();
     } else if(result == Result.UNSTABLE){
@@ -311,7 +311,7 @@ public class ChatworkPublisher extends Publisher {
       return proxyport;
     }
     
-    private String globalSuccessfulMessage;
+    private String globalSuccessMessage;
 
     private String globalFailureMessage;
 
@@ -321,8 +321,8 @@ public class ChatworkPublisher extends Publisher {
 
     private String globalAbortedMessage;
 
-    public String getGlobalSuccessfulMessage() {
-      return globalSuccessfulMessage;
+    public String getGlobalSuccessMessage() {
+      return globalSuccessMessage;
     }
 
     public String getGlobalFailureMessage() {
@@ -359,7 +359,7 @@ public class ChatworkPublisher extends Publisher {
       proxysv = formData.getString("proxysv");
       proxyport = formData.getString("proxyport");
 
-      globalSuccessfulMessage = formData.getString("globalSuccessfulMessage");
+      globalSuccessMessage = formData.getString("globalSuccessMessage");
       globalFailureMessage    = formData.getString("globalFailureMessage");
       globalUnstableMessage   = formData.getString("globalUnstableMessage");
       globalNotBuiltMessage   = formData.getString("globalNotBuiltMessage");
@@ -371,7 +371,7 @@ public class ChatworkPublisher extends Publisher {
     
     public String getGlobalResultMessage(Result result){
       if(result == Result.SUCCESS){
-        return getGlobalSuccessfulMessage();
+        return getGlobalSuccessMessage();
       } else if(result == Result.FAILURE){
         return getGlobalFailureMessage();
       } else if(result == Result.UNSTABLE){
