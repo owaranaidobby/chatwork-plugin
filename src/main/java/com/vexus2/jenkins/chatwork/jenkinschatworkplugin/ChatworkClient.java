@@ -37,11 +37,12 @@ public class ChatworkClient {
     URL obj = new URL(url);
     HttpsURLConnection con;
 
-    if (StringUtils.equals(this.proxySv, "NOPROXY")) {
-      con = (HttpsURLConnection) obj.openConnection();
-    } else {
+    if (isEnabledProxy()) {
       Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxySv, Integer.parseInt(this.proxyPort)));
       con = (HttpsURLConnection) obj.openConnection(proxy);
+
+    } else {
+      con = (HttpsURLConnection) obj.openConnection();
     }
 
     con.setRequestMethod("POST");
@@ -67,6 +68,22 @@ public class ChatworkClient {
     int responseCode = con.getResponseCode();
     if (responseCode != 200) {
       throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + responseCode + ", message = " + con.getResponseMessage());
+    }
+
+    return true;
+  }
+
+  public boolean isEnabledProxy(){
+    if(StringUtils.isEmpty(proxySv) || StringUtils.isEmpty(proxyPort) || StringUtils.equals(proxySv, "NOPROXY")){
+      return false;
+    }
+
+    try {
+      Integer.parseInt(proxyPort);
+
+    } catch (NumberFormatException e){
+      // proxyPort is not number
+      return false;
     }
 
     return true;
