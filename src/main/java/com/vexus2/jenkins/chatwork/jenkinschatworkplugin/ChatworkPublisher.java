@@ -50,11 +50,11 @@ public class ChatworkPublisher extends Publisher {
     this.rid = rid;
     this.defaultMessage = StringUtils.trimToEmpty(defaultMessage);
 
-    this.successMessage    = StringUtils.trimToEmpty(successMessage);
-    this.failureMessage    = StringUtils.trimToEmpty(failureMessage);
-    this.unstableMessage   = StringUtils.trimToEmpty(unstableMessage);
-    this.notBuiltMessage   = StringUtils.trimToEmpty(notBuiltMessage);
-    this.abortedMessage    = StringUtils.trimToEmpty(abortedMessage);
+    this.successMessage   = StringUtils.trimToEmpty(successMessage);
+    this.failureMessage   = StringUtils.trimToEmpty(failureMessage);
+    this.unstableMessage  = StringUtils.trimToEmpty(unstableMessage);
+    this.notBuiltMessage  = StringUtils.trimToEmpty(notBuiltMessage);
+    this.abortedMessage   = StringUtils.trimToEmpty(abortedMessage);
 
     this.notifyOnSuccess  = notifyOnSuccess;
     this.notifyOnFail     = notifyOnFail;
@@ -359,11 +359,11 @@ public class ChatworkPublisher extends Publisher {
       proxysv = formData.getString("proxysv");
       proxyport = formData.getString("proxyport");
 
-      globalSuccessMessage = formData.getString("globalSuccessMessage");
-      globalFailureMessage    = formData.getString("globalFailureMessage");
-      globalUnstableMessage   = formData.getString("globalUnstableMessage");
-      globalNotBuiltMessage   = formData.getString("globalNotBuiltMessage");
-      globalAbortedMessage    = formData.getString("globalAbortedMessage");
+      globalSuccessMessage  = formData.getString("globalSuccessMessage");
+      globalFailureMessage  = formData.getString("globalFailureMessage");
+      globalUnstableMessage = formData.getString("globalUnstableMessage");
+      globalNotBuiltMessage = formData.getString("globalNotBuiltMessage");
+      globalAbortedMessage  = formData.getString("globalAbortedMessage");
 
       save();
       return super.configure(req, formData);
