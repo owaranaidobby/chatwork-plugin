@@ -1,33 +1,75 @@
-# Changelog
+# Change Log
 
-## [chatwork-0.6.2] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.6.2)
-#### 2015/01/21
-- *Merged pull-request:* Support variable to room id  [\#8](https://github.com/jenkinsci/chatwork-plugin/pull/8) ([sue445](https://github.com/sue445))
+## [Unreleased](https://github.com/jenkinsci/chatwork-plugin/tree/HEAD)
 
-- *Merged pull-request:* Refcatorings [\#7](https://github.com/jenkinsci/chatwork-plugin/pull/7) ([sue445](https://github.com/sue445))
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-0.6.2...HEAD)
 
-- *Merged pull-request:* englishnize [\#5](https://github.com/jenkinsci/chatwork-plugin/pull/5) ([sue445](https://github.com/sue445))
+**Closed issues:**
 
-- *Closed issue:* Write reference [\#4](https://github.com/jenkinsci/chatwork-plugin/issues/4)
+- sendMessage method makes parseInt error [\#16](https://github.com/jenkinsci/chatwork-plugin/issues/16)
 
-- *Closed issue:* Support variable to room id [\#6](https://github.com/jenkinsci/chatwork-plugin/issues/6)
+- Setting build result messages [\#9](https://github.com/jenkinsci/chatwork-plugin/issues/9)
 
-## [chatwork-0.6.1] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.6.1)
-#### 2015/01/13
-## [chatwork-0.5] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.5)
-#### 2015/01/13
-- *Merged pull-request:* Use official jenkins [\#3](https://github.com/jenkinsci/chatwork-plugin/pull/3) ([sue445](https://github.com/sue445))
+**Merged pull requests:**
 
-- *Merged pull-request:* Prepare for jenkinsci hosting [\#2](https://github.com/jenkinsci/chatwork-plugin/pull/2) ([sue445](https://github.com/sue445))
+- downgrade groovy [\#15](https://github.com/jenkinsci/chatwork-plugin/pull/15) ([sue445](https://github.com/sue445))
 
-- *Closed issue:* travis ci -\> clouebees jenkins [\#1](https://github.com/jenkinsci/chatwork-plugin/issues/1)
+- Fix: can not build spec file [\#14](https://github.com/jenkinsci/chatwork-plugin/pull/14) ([sue445](https://github.com/sue445))
 
-## [chatwork-0.3] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.3)
-#### 2013/12/16
-## [chatwork-0.2] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.2)
-#### 2013/12/16
-## [chatwork-0.1] (https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.1)
-#### 2013/12/02
+- Refactor: junit test -\> spock test [\#13](https://github.com/jenkinsci/chatwork-plugin/pull/13) ([sue445](https://github.com/sue445))
+
+- Add global messages [\#12](https://github.com/jenkinsci/chatwork-plugin/pull/12) ([sue445](https://github.com/sue445))
+
+-  Support build result pattern messesages [\#11](https://github.com/jenkinsci/chatwork-plugin/pull/11) ([sue445](https://github.com/sue445))
+
+- Refactor test [\#10](https://github.com/jenkinsci/chatwork-plugin/pull/10) ([sue445](https://github.com/sue445))
+
+## [chatwork-0.6.2](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.6.2) (2015/01/21)
+
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-0.6.1...chatwork-0.6.2)
+
+**Closed issues:**
+
+- Support variable to room id [\#6](https://github.com/jenkinsci/chatwork-plugin/issues/6)
+
+- Write reference [\#4](https://github.com/jenkinsci/chatwork-plugin/issues/4)
+
+**Merged pull requests:**
+
+- Support variable to room id  [\#8](https://github.com/jenkinsci/chatwork-plugin/pull/8) ([sue445](https://github.com/sue445))
+
+- Refcatorings [\#7](https://github.com/jenkinsci/chatwork-plugin/pull/7) ([sue445](https://github.com/sue445))
+
+- englishnize [\#5](https://github.com/jenkinsci/chatwork-plugin/pull/5) ([sue445](https://github.com/sue445))
+
+## [chatwork-0.6.1](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.6.1) (2015/01/13)
+
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-0.5...chatwork-0.6.1)
+
+## [chatwork-0.5](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.5) (2015/01/13)
+
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-0.3...chatwork-0.5)
+
+**Closed issues:**
+
+- travis ci -\> clouebees jenkins [\#1](https://github.com/jenkinsci/chatwork-plugin/issues/1)
+
+**Merged pull requests:**
+
+- Use official jenkins [\#3](https://github.com/jenkinsci/chatwork-plugin/pull/3) ([sue445](https://github.com/sue445))
+
+- Prepare for jenkinsci hosting [\#2](https://github.com/jenkinsci/chatwork-plugin/pull/2) ([sue445](https://github.com/sue445))
+
+## [chatwork-0.3](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.3) (2013/12/16)
+
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-0.2...chatwork-0.3)
+
+## [chatwork-0.2](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.2) (2013/12/16)
+
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-0.1...chatwork-0.2)
+
+## [chatwork-0.1](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-0.1) (2013/12/02)
 
 
-\* *This changelog was generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
+
+\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
