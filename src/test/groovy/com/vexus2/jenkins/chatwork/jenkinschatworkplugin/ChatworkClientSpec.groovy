@@ -58,11 +58,12 @@ class ChatworkClientSpec{
       "NOPROXY"   | ""        || false
       "NOPROXY"   | "80"      || false
       "localhost" | "80"      || true
-      "localhost" | ""        || true
-      ""          | "80"      || true
-      ""          | ""        || true
-      null        | "80"      || true
-      null        | ""        || true
+      "localhost" | "str"     || false
+      "localhost" | ""        || false
+      ""          | "80"      || false
+      ""          | ""        || false
+      null        | "80"      || false
+      null        | ""        || false
     }
   }
 }

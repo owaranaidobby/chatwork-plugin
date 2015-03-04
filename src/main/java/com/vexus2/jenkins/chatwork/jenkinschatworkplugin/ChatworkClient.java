@@ -73,6 +73,18 @@ public class ChatworkClient {
   }
 
   public boolean isEnabledProxy(){
-    return !StringUtils.equals(this.proxySv, "NOPROXY");
+    if(StringUtils.isEmpty(proxySv) || StringUtils.isEmpty(proxyPort) || StringUtils.equals(proxySv, "NOPROXY")){
+      return false;
+    }
+
+    try {
+      Integer.parseInt(proxyPort);
+
+    } catch (NumberFormatException e){
+      // proxyPort is not number
+      return false;
+    }
+
+    return true;
   }
 }
