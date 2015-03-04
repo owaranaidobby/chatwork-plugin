@@ -37,7 +37,7 @@ public class ChatworkClient {
     URL obj = new URL(url);
     HttpsURLConnection con;
 
-    if (StringUtils.equals(this.proxySv, "NOPROXY")) {
+    if (!isEnabledProxy()) {
       con = (HttpsURLConnection) obj.openConnection();
     } else {
       Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxySv, Integer.parseInt(this.proxyPort)));
@@ -70,5 +70,9 @@ public class ChatworkClient {
     }
 
     return true;
+  }
+
+  public boolean isEnabledProxy(){
+    return !StringUtils.equals(this.proxySv, "NOPROXY");
   }
 }

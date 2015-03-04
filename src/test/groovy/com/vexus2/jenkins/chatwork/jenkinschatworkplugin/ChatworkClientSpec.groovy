@@ -9,6 +9,7 @@ import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
 import spock.lang.Ignore
 import spock.lang.Specification
+import spock.lang.Unroll
 
 @RunWith(Enclosed)
 class ChatworkClientSpec{
@@ -40,6 +41,28 @@ class ChatworkClientSpec{
       expect:
       // TODO: If you want to use, set your actual apiKey and roomId
       client.sendMessage("testMessage")
+    }
+  }
+
+  static class enabledProxy extends Specification {
+    @Unroll
+    def "proxySv=#proxySv, proxyPort=#proxyPort: isEnabledProxy() == #expected"(){
+      setup:
+      ChatworkClient client = new ChatworkClient("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", proxySv, proxyPort, "00000000")
+
+      expect:
+      client.isEnabledProxy() == expected
+
+      where:
+      proxySv     | proxyPort || expected
+      "NOPROXY"   | ""        || false
+      "NOPROXY"   | "80"      || false
+      "localhost" | "80"      || true
+      "localhost" | ""        || true
+      ""          | "80"      || true
+      ""          | ""        || true
+      null        | "80"      || true
+      null        | ""        || true
     }
   }
 }
