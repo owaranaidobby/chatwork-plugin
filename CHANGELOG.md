@@ -6,11 +6,17 @@
 
 **Closed issues:**
 
+- even if proxysv is empty , disable proxy [\#17](https://github.com/jenkinsci/chatwork-plugin/issues/17)
+
 - sendMessage method makes parseInt error [\#16](https://github.com/jenkinsci/chatwork-plugin/issues/16)
 
 - Setting build result messages [\#9](https://github.com/jenkinsci/chatwork-plugin/issues/9)
 
 **Merged pull requests:**
+
+- Rename: successful -\> success [\#19](https://github.com/jenkinsci/chatwork-plugin/pull/19) ([sue445](https://github.com/sue445))
+
+- If proxySv and proxyPort are empty or invalid, don't use proxy [\#18](https://github.com/jenkinsci/chatwork-plugin/pull/18) ([sue445](https://github.com/sue445))
 
 - downgrade groovy [\#15](https://github.com/jenkinsci/chatwork-plugin/pull/15) ([sue445](https://github.com/sue445))
 
