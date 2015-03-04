@@ -26,7 +26,7 @@
       <f:textbox />
     </f:entry>
 
-    <f:entry title="Global Successful message" field="globalSuccessfulMessage">
+    <f:entry title="Global Success message" field="globalSuccessMessage">
       <f:textarea/>
     </f:entry>
     <f:entry title="Global Failure message" field="globalFailureMessage">

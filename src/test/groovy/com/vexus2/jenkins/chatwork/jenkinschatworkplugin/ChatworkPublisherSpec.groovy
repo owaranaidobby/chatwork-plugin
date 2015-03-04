@@ -66,7 +66,7 @@ https://github.com/octocat/Hello-World/compare/master...topic
       // via. https://gist.github.com/gjtorikian/5171861
       String payload = readFixture("payload_webhook.json")
       publisher = new ChatworkPublisherBuilder().rid("00000000").
-          successfulMessage('$PAYLOAD_SUMMARY').notifyOnSuccess(true).notifyOnFail(true).build()
+          successMessage('$PAYLOAD_SUMMARY').notifyOnSuccess(true).notifyOnFail(true).build()
 
       AbstractBuild mockBuild = mock(AbstractBuild)
       when(mockBuild.getBuildVariables()).thenReturn(['payload': payload])
@@ -97,7 +97,7 @@ https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a
     def "should return message"(){
       setup:
       ChatworkPublisher publisher = new ChatworkPublisherBuilder().
-          successfulMessage("successfulMessage").
+          successMessage("successMessage").
           failureMessage("failureMessage").
           unstableMessage("unstableMessage").
           notBuiltMessage("notBuiltMessage").
@@ -109,7 +109,7 @@ https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a
 
       where:
       result           | expected
-      Result.SUCCESS   | "successfulMessage"
+      Result.SUCCESS   | "successMessage"
       Result.FAILURE   | "failureMessage"
       Result.UNSTABLE  | "unstableMessage"
       Result.NOT_BUILT | "notBuiltMessage"

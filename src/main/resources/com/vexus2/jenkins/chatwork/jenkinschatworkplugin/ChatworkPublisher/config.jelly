@@ -4,8 +4,8 @@
     <f:textbox/>
   </f:entry>
 
-  <f:entry title="Successful message" field="successfulMessage"
-      description="If 'Successful message' is blank, used 'Global Successful message'">
+  <f:entry title="Success message" field="successMessage"
+      description="If 'Success message' is blank, used 'Global Success message'">
     <f:textarea/>
   </f:entry>
   <f:entry title="notify on build success" field="notifyOnSuccess">

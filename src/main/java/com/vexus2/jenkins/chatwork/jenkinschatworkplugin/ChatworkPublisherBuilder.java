@@ -5,7 +5,7 @@ public class ChatworkPublisherBuilder {
 
   private String defaultMessage;
 
-  private String successfulMessage;
+  private String successMessage;
   private String failureMessage;
   private String unstableMessage;
   private String notBuiltMessage;
@@ -27,8 +27,8 @@ public class ChatworkPublisherBuilder {
     return this;
   }
 
-  public ChatworkPublisherBuilder successfulMessage(String value){
-    successfulMessage = value;
+  public ChatworkPublisherBuilder successMessage(String value){
+    successMessage = value;
     return this;
   }
 
@@ -78,7 +78,7 @@ public class ChatworkPublisherBuilder {
   }
 
   public ChatworkPublisher build(){
-    return new ChatworkPublisher(rid, defaultMessage, notifyOnSuccess, notifyOnFail, unstableMessage, notBuiltMessage, abortedMessage, successfulMessage, failureMessage, notifyOnUnstable, notifyOnNotBuilt, notifyOnAborted);
+    return new ChatworkPublisher(rid, defaultMessage, notifyOnSuccess, notifyOnFail, unstableMessage, notBuiltMessage, abortedMessage, successMessage, failureMessage, notifyOnUnstable, notifyOnNotBuilt, notifyOnAborted);
   }
 
 }
