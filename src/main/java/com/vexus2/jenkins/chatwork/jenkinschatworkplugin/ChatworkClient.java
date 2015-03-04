@@ -37,11 +37,12 @@ public class ChatworkClient {
     URL obj = new URL(url);
     HttpsURLConnection con;
 
-    if (!isEnabledProxy()) {
-      con = (HttpsURLConnection) obj.openConnection();
-    } else {
+    if (isEnabledProxy()) {
       Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxySv, Integer.parseInt(this.proxyPort)));
       con = (HttpsURLConnection) obj.openConnection(proxy);
+
+    } else {
+      con = (HttpsURLConnection) obj.openConnection();
     }
 
     con.setRequestMethod("POST");
