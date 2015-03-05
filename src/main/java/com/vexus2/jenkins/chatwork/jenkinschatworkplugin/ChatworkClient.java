@@ -74,7 +74,7 @@ public class ChatworkClient {
   }
 
   public boolean isEnabledProxy(){
-    if(StringUtils.isEmpty(proxySv) || StringUtils.isEmpty(proxyPort) || StringUtils.equals(proxySv, "NOPROXY")){
+    if(StringUtils.isBlank(proxySv) || StringUtils.isBlank(proxyPort) || StringUtils.equals(proxySv, "NOPROXY")){
       return false;
     }
 

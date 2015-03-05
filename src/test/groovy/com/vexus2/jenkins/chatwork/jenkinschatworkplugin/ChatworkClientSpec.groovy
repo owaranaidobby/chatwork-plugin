@@ -61,6 +61,8 @@ class ChatworkClientSpec{
       "localhost" | "str"     || false
       "localhost" | ""        || false
       ""          | "80"      || false
+      "localhost" | " "       || false
+      " "         | "80"      || false
       ""          | ""        || false
       null        | "80"      || false
       null        | ""        || false
