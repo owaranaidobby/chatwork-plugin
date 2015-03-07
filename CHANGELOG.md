@@ -1,8 +1,8 @@
 # Change Log
 
-## [Unreleased](https://github.com/jenkinsci/chatwork-plugin/tree/HEAD)
+## [chatwork-1.0.0](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-1.0.0) (2015/03/07)
 
-[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-0.6.2...HEAD)
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-0.6.2...chatwork-1.0.0)
 
 **Closed issues:**
 
@@ -13,6 +13,8 @@
 - Setting build result messages [\#9](https://github.com/jenkinsci/chatwork-plugin/issues/9)
 
 **Merged pull requests:**
+
+- tweak proxy config [\#20](https://github.com/jenkinsci/chatwork-plugin/pull/20) ([sue445](https://github.com/sue445))
 
 - Rename: successful -\> success [\#19](https://github.com/jenkinsci/chatwork-plugin/pull/19) ([sue445](https://github.com/sue445))
 
