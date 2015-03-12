@@ -4,3 +4,4 @@ jenkins-chatwork-plugin
 [![Build Status](https://jenkins.ci.cloudbees.com/buildStatus/icon?job=plugins/chatwork-plugin)](https://jenkins.ci.cloudbees.com/job/plugins/job/chatwork-plugin/)
 
 Jenkins Chatwork Plugin
+
