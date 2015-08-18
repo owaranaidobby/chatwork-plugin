@@ -1,4 +1,4 @@
-package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
+package com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;

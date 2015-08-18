@@ -1,5 +1,6 @@
 package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
 
+import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.ChatworkClient;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;

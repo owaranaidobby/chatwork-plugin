@@ -1,4 +1,4 @@
-package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
+package com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api;
 
 public class ChatworkException extends RuntimeException{
     public ChatworkException(){
