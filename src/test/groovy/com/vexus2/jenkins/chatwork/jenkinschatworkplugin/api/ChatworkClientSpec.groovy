@@ -1,4 +1,4 @@
-package com.vexus2.jenkins.chatwork.jenkinschatworkplugin
+package com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api
 
 import co.freeside.betamax.Betamax
 import co.freeside.betamax.MatchRule
