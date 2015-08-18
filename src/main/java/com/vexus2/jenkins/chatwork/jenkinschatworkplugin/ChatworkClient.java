@@ -1,14 +1,14 @@
 package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.ProxyHost;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatworkClient {
 
@@ -17,60 +17,54 @@ public class ChatworkClient {
   private final String proxySv;
   private final String proxyPort;
 
-  private final String roomId;
-
   private static final String API_URL = "https://api.chatwork.com/v1";
 
-  public ChatworkClient(String apiKey, String proxySv, String proxyPort, String roomId) {
+  private final HttpClient httpClient = new HttpClient();
+
+  public ChatworkClient(String apiKey, String proxySv, String proxyPort) {
     this.apiKey = apiKey;
     this.proxySv = proxySv;
     this.proxyPort = proxyPort;
-    this.roomId = roomId;
   }
 
-  public boolean sendMessage(String message) throws IOException {
-    if (StringUtils.isEmpty(apiKey) || StringUtils.isEmpty(roomId)) {
-      throw new IllegalArgumentException("API Key or Room ID is empty");
+  public void sendMessage(String roomId, String message) throws IOException {
+    if (StringUtils.isEmpty(roomId)) {
+      throw new IllegalArgumentException("Room ID is empty");
     }
 
-    String url = API_URL + "/rooms/" + this.roomId + "/messages";
-    URL obj = new URL(url);
-    HttpsURLConnection con;
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("body", message);
+    post("/rooms/" + roomId + "/messages", params);
+  }
 
-    if (isEnabledProxy()) {
-      Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxySv, Integer.parseInt(this.proxyPort)));
-      con = (HttpsURLConnection) obj.openConnection(proxy);
-
-    } else {
-      con = (HttpsURLConnection) obj.openConnection();
+  private void post(String path, Map<String, String> params) throws IOException {
+    if (StringUtils.isEmpty(apiKey)) {
+      throw new IllegalArgumentException("API Key is empty");
     }
 
-    con.setRequestMethod("POST");
-    con.setRequestProperty("X-ChatWorkToken", this.apiKey);
-    con.setRequestProperty("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+    PostMethod method = new PostMethod(API_URL + path);
 
-    String urlParameters = "body=" + message;
-
-    con.setDoOutput(true);
-
-    DataOutputStream wr = new DataOutputStream(con.getOutputStream());
     try {
-      wr.write(urlParameters.getBytes("utf-8"));
-      wr.flush();
+      method.addRequestHeader("X-ChatWorkToken", apiKey);
+
+      for(Map.Entry<String, String> entry : params.entrySet()) {
+        method.setParameter(entry.getKey(), entry.getValue());
+      }
+
+      if(isEnabledProxy()){
+        setProxyHost(proxySv, Integer.parseInt(proxyPort));
+      }
+
+      int statusCode = httpClient.executeMethod(method);
+
+      if (statusCode != HttpStatus.SC_OK) {
+        String response = method.getResponseBodyAsString();
+        throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + statusCode + ", message =" + response);
+      }
 
     } finally {
-      IOUtils.closeQuietly(wr);
-
+      method.releaseConnection();
     }
-
-    con.connect();
-
-    int responseCode = con.getResponseCode();
-    if (responseCode != 200) {
-      throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + responseCode + ", message = " + con.getResponseMessage());
-    }
-
-    return true;
   }
 
   public boolean isEnabledProxy(){
@@ -87,5 +81,9 @@ public class ChatworkClient {
     }
 
     return true;
+  }
+
+  public void setProxyHost(String hostname, int port){
+    httpClient.getHostConfiguration().setProxyHost(new ProxyHost(hostname, port));
   }
 }

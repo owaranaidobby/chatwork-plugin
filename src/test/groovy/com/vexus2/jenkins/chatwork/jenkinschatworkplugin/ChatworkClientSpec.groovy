@@ -18,6 +18,8 @@ class ChatworkClientSpec{
 
     ChatworkClient client
 
+    String roomId = "00000000"
+
     @Rule
     Recorder recorder = new Recorder()
 
@@ -25,14 +27,14 @@ class ChatworkClientSpec{
       String apiKey = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       String proxySv = "NOPROXY"
       String proxyPort = "80"
-      String channelId = "00000000"
-      client = new ChatworkClient(apiKey, proxySv, proxyPort, channelId)
+      client = new ChatworkClient(apiKey, proxySv, proxyPort)
+      client.setProxyHost("localhost", recorder.getProxyPort())
     }
 
     @Betamax(tape=ChatworkClientSpec.sendMessage.TAPE_NAME, mode = TapeMode.READ_ONLY, match = [MatchRule.host, MatchRule.path])
     def "sendMessage should send message"(){
       expect:
-      client.sendMessage("testMessage") == true
+      client.sendMessage(roomId, "testMessage")
     }
 
     @Ignore
@@ -40,7 +42,7 @@ class ChatworkClientSpec{
     def "call ChatWork API and save response to src/test/resources/betamax/tapes/ChatWork_v1_POST_rooms_messages.yaml"(){
       expect:
       // TODO: If you want to use, set your actual apiKey and roomId
-      client.sendMessage("testMessage")
+      client.sendMessage(roomId, "testMessage")
     }
   }
 
@@ -48,7 +50,7 @@ class ChatworkClientSpec{
     @Unroll
     def "proxySv=#proxySv, proxyPort=#proxyPort: isEnabledProxy() == #expected"(){
       setup:
-      ChatworkClient client = new ChatworkClient("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", proxySv, proxyPort, "00000000")
+      ChatworkClient client = new ChatworkClient("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", proxySv, proxyPort)
 
       expect:
       client.isEnabledProxy() == expected
