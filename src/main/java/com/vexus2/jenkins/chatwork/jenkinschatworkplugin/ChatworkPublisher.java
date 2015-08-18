@@ -157,8 +157,8 @@ public class ChatworkPublisher extends Publisher {
     }
 
     try {
-      ChatworkClient chatworkClient = new ChatworkClient(getDescriptor().getApikey(), getDescriptor().getProxysv(), getDescriptor().getProxyport(), resolveRoomId());
-      chatworkClient.sendMessage(message);
+      ChatworkClient chatworkClient = new ChatworkClient(getDescriptor().getApikey(), getDescriptor().getProxysv(), getDescriptor().getProxyport());
+      chatworkClient.sendMessage(resolveRoomId(), message);
 
       return true;
     } catch (Exception e) {

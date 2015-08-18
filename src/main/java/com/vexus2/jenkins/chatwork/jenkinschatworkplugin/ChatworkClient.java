@@ -7,6 +7,8 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatworkClient {
 
@@ -15,34 +17,42 @@ public class ChatworkClient {
   private final String proxySv;
   private final String proxyPort;
 
-  private final String roomId;
-
   private static final String API_URL = "https://api.chatwork.com/v1";
 
   private final HttpClient httpClient = new HttpClient();
 
-  public ChatworkClient(String apiKey, String proxySv, String proxyPort, String roomId) {
+  public ChatworkClient(String apiKey, String proxySv, String proxyPort) {
     this.apiKey = apiKey;
     this.proxySv = proxySv;
     this.proxyPort = proxyPort;
-    this.roomId = roomId;
   }
 
-  public boolean sendMessage(String message) throws IOException {
-    if (StringUtils.isEmpty(apiKey) || StringUtils.isEmpty(roomId)) {
-      throw new IllegalArgumentException("API Key or Room ID is empty");
+  public void sendMessage(String roomId, String message) throws IOException {
+    if (StringUtils.isEmpty(roomId)) {
+      throw new IllegalArgumentException("Room ID is empty");
     }
 
-    String url = API_URL + "/rooms/" + this.roomId + "/messages";
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("body", message);
+    post("/rooms/" + roomId + "/messages", params);
+  }
 
-    PostMethod method = new PostMethod(url);
+  private void post(String path, Map<String, String> params) throws IOException {
+    if (StringUtils.isEmpty(apiKey)) {
+      throw new IllegalArgumentException("API Key is empty");
+    }
+
+    PostMethod method = new PostMethod(API_URL + path);
 
     try {
       method.addRequestHeader("X-ChatWorkToken", apiKey);
-      method.setParameter("body", message);
+
+      for(Map.Entry<String, String> entry : params.entrySet()) {
+        method.setParameter(entry.getKey(), entry.getValue());
+      }
 
       if(isEnabledProxy()){
-        setProxyHost(proxySv, Integer.parseInt(this.proxyPort));
+        setProxyHost(proxySv, Integer.parseInt(proxyPort));
       }
 
       int statusCode = httpClient.executeMethod(method);
@@ -55,8 +65,6 @@ public class ChatworkClient {
     } finally {
       method.releaseConnection();
     }
-
-    return true;
   }
 
   public boolean isEnabledProxy(){
