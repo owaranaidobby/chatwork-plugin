@@ -1,6 +1,7 @@
 package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
 
 import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.ChatworkClient;
+import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.Room;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
@@ -10,6 +11,7 @@ import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
+import hudson.util.ListBoxModel;
 import hudson.util.VariableResolver;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -18,7 +20,9 @@ import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChatworkPublisher extends Publisher {
@@ -158,7 +162,7 @@ public class ChatworkPublisher extends Publisher {
     }
 
     try {
-      ChatworkClient chatworkClient = new ChatworkClient(getDescriptor().getApikey(), getDescriptor().getProxysv(), getDescriptor().getProxyport());
+      ChatworkClient chatworkClient = getDescriptor().getChatworkClient();
       chatworkClient.sendMessage(resolveRoomId(), message);
 
       return true;
@@ -383,6 +387,22 @@ public class ChatworkPublisher extends Publisher {
         return getGlobalAbortedMessage();
       }
       return "";
+    }
+
+    public ListBoxModel doFillRidItems() throws IOException {
+      ChatworkClient chatworkClient = getChatworkClient();
+      List<Room> rooms = chatworkClient.getRooms();
+
+      ListBoxModel items = new ListBoxModel();
+
+      for (Room room : rooms) {
+        items.add(room.name, room.roomId);
+      }
+      return items;
+    }
+
+    private ChatworkClient getChatworkClient() {
+      return new ChatworkClient(apikey, proxysv, proxyport);
     }
   }
 }
