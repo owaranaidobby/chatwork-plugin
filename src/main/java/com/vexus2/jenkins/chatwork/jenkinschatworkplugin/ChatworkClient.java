@@ -1,14 +1,12 @@
 package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.ProxyHost;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
 
 public class ChatworkClient {
 
@@ -20,6 +18,8 @@ public class ChatworkClient {
   private final String roomId;
 
   private static final String API_URL = "https://api.chatwork.com/v1";
+
+  private final HttpClient httpClient = new HttpClient();
 
   public ChatworkClient(String apiKey, String proxySv, String proxyPort, String roomId) {
     this.apiKey = apiKey;
@@ -34,40 +34,26 @@ public class ChatworkClient {
     }
 
     String url = API_URL + "/rooms/" + this.roomId + "/messages";
-    URL obj = new URL(url);
-    HttpsURLConnection con;
 
-    if (isEnabledProxy()) {
-      Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxySv, Integer.parseInt(this.proxyPort)));
-      con = (HttpsURLConnection) obj.openConnection(proxy);
+    PostMethod method = new PostMethod(url);
 
-    } else {
-      con = (HttpsURLConnection) obj.openConnection();
-    }
-
-    con.setRequestMethod("POST");
-    con.setRequestProperty("X-ChatWorkToken", this.apiKey);
-    con.setRequestProperty("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-
-    String urlParameters = "body=" + message;
-
-    con.setDoOutput(true);
-
-    DataOutputStream wr = new DataOutputStream(con.getOutputStream());
     try {
-      wr.write(urlParameters.getBytes("utf-8"));
-      wr.flush();
+      method.addRequestHeader("X-ChatWorkToken", apiKey);
+      method.setParameter("body", message);
+
+      if(isEnabledProxy()){
+        setProxyHost(proxySv, Integer.parseInt(this.proxyPort));
+      }
+
+      int statusCode = httpClient.executeMethod(method);
+
+      if (statusCode != HttpStatus.SC_OK) {
+        String response = method.getResponseBodyAsString();
+        throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + statusCode + ", message =" + response);
+      }
 
     } finally {
-      IOUtils.closeQuietly(wr);
-
-    }
-
-    con.connect();
-
-    int responseCode = con.getResponseCode();
-    if (responseCode != 200) {
-      throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + responseCode + ", message = " + con.getResponseMessage());
+      method.releaseConnection();
     }
 
     return true;
@@ -87,5 +73,9 @@ public class ChatworkClient {
     }
 
     return true;
+  }
+
+  public void setProxyHost(String hostname, int port){
+    httpClient.getHostConfiguration().setProxyHost(new ProxyHost(hostname, port));
   }
 }

@@ -27,6 +27,7 @@ class ChatworkClientSpec{
       String proxyPort = "80"
       String channelId = "00000000"
       client = new ChatworkClient(apiKey, proxySv, proxyPort, channelId)
+      client.setProxyHost("localhost", recorder.getProxyPort())
     }
 
     @Betamax(tape=ChatworkClientSpec.sendMessage.TAPE_NAME, mode = TapeMode.READ_ONLY, match = [MatchRule.host, MatchRule.path])
