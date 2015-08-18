@@ -99,7 +99,7 @@ class ChatworkClientSpec{
     def "getRooms should get response"(){
       setup:
       List<Room> expectedRooms = [
-          new Room(roomId: "123", name: "Group Chat Name"),
+          new Room(roomId: "123", name: "Group Chat Name", type: "group"),
       ]
 
       expect:

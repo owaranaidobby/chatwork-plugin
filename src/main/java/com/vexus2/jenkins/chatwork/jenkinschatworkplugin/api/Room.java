@@ -13,11 +13,15 @@ public class Room {
   @JsonProperty("name")
   public String name;
 
+  @JsonProperty("type")
+  public String type;
+
   @Override
   public int hashCode(){
     return new HashCodeBuilder()
         .append(name)
         .append(roomId)
+        .append(type)
         .toHashCode();
   }
 
@@ -28,6 +32,7 @@ public class Room {
       return new EqualsBuilder()
           .append(name, other.name)
           .append(roomId, other.roomId)
+          .append(type, other.type)
           .isEquals();
     } else{
       return false;

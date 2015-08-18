@@ -2,6 +2,7 @@ package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
 
 import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.ChatworkClient;
 import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.Room;
+import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.RoomComparator;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
@@ -21,6 +22,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -392,11 +394,13 @@ public class ChatworkPublisher extends Publisher {
     public ListBoxModel doFillRidItems() throws IOException {
       ChatworkClient chatworkClient = getChatworkClient();
       List<Room> rooms = chatworkClient.getRooms();
+      Collections.sort(rooms, new RoomComparator());
 
       ListBoxModel items = new ListBoxModel();
 
       for (Room room : rooms) {
-        items.add(room.name, room.roomId);
+        String displayName = "[" + room.type + "] " + room.name;
+        items.add(displayName, room.roomId);
       }
       return items;
     }
