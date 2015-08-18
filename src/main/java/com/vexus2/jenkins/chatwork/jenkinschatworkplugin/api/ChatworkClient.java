@@ -3,11 +3,15 @@ package com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.ProxyHost;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChatworkClient {
@@ -37,6 +41,12 @@ public class ChatworkClient {
     post("/rooms/" + roomId + "/messages", params);
   }
 
+  public List<Room> getRooms() throws IOException {
+    String json = get("/rooms");
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.readValue(json, new TypeReference<List<Room>>() {});
+  }
+
   private void post(String path, Map<String, String> params) throws IOException {
     if (StringUtils.isEmpty(apiKey)) {
       throw new IllegalArgumentException("API Key is empty");
@@ -61,6 +71,34 @@ public class ChatworkClient {
         String response = method.getResponseBodyAsString();
         throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + statusCode + ", message =" + response);
       }
+
+    } finally {
+      method.releaseConnection();
+    }
+  }
+
+  private String get(String path) throws IOException {
+    if (StringUtils.isEmpty(apiKey)) {
+      throw new IllegalArgumentException("API Key is empty");
+    }
+
+    GetMethod method = new GetMethod(API_URL + path);
+
+    try {
+      method.addRequestHeader("X-ChatWorkToken", apiKey);
+
+      if(isEnabledProxy()){
+        setProxyHost(proxySv, Integer.parseInt(proxyPort));
+      }
+
+      int statusCode = httpClient.executeMethod(method);
+
+      if (statusCode != HttpStatus.SC_OK) {
+        String response = method.getResponseBodyAsString();
+        throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + statusCode + ", message =" + response);
+      }
+
+      return method.getResponseBodyAsString();
 
     } finally {
       method.releaseConnection();
