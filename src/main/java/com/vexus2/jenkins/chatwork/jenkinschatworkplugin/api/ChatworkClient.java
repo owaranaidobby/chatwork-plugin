@@ -6,10 +6,12 @@ import org.apache.commons.httpclient.ProxyHost;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,8 @@ public class ChatworkClient {
   private final String proxyPort;
 
   private static final String API_URL = "https://api.chatwork.com/v1";
+
+  private static CachedResponse<List<Room>> CACHED_ROOMS = new CachedResponse<List<Room>>();
 
   private final HttpClient httpClient = new HttpClient();
 
@@ -45,6 +49,19 @@ public class ChatworkClient {
     String json = get("/rooms");
     ObjectMapper mapper = new ObjectMapper();
     return mapper.readValue(json, new TypeReference<List<Room>>() {});
+  }
+
+  public List<Room> getCachedRooms() throws IOException {
+    return CACHED_ROOMS.fetch(new CachedResponse.Callback<List<Room>>() {
+      @Override
+      public List<Room> get() throws IOException {
+        return getRooms();
+      }
+    });
+  }
+
+  public static void clearRoomCache(){
+    CACHED_ROOMS.clear();
   }
 
   private void post(String path, Map<String, String> params) throws IOException {

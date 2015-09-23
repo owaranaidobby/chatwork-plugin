@@ -393,7 +393,7 @@ public class ChatworkPublisher extends Publisher {
 
     public ListBoxModel doFillRidItems() throws IOException {
       ChatworkClient chatworkClient = getChatworkClient();
-      List<Room> rooms = chatworkClient.getRooms();
+      List<Room> rooms = chatworkClient.getCachedRooms();
       Collections.sort(rooms, new RoomComparator());
 
       ListBoxModel items = new ListBoxModel();
