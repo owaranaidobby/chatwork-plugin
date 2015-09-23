@@ -41,5 +41,19 @@
     <f:entry title="Global Aborted message" field="globalAbortedMessage">
       <f:textarea/>
     </f:entry>
+    <f:entry title="Clear cache" field="clearCache">
+      <input type="button" value="clear" onclick="ChatworkPublisher.clearCache();"/>
+    </f:entry>
+    <script>
+      var ChatworkPublisher = {
+        clearCache: function(){
+          new Ajax.Request("${rootURL}/descriptor/com.vexus2.jenkins.chatwork.jenkinschatworkplugin.ChatworkPublisher/clearCache", {
+            onSuccess: function(rsp) {
+              alert("Clear cache done");
+            }
+          });
+        }
+      };
+    </script>
   </f:section>
 </j:jelly>

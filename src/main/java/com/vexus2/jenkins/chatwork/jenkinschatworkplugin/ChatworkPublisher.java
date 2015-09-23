@@ -20,6 +20,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -407,6 +408,10 @@ public class ChatworkPublisher extends Publisher {
 
     private ChatworkClient getChatworkClient() {
       return new ChatworkClient(apikey, proxysv, proxyport);
+    }
+
+    public void doClearCache(StaplerRequest req, StaplerResponse rsp){
+      ChatworkClient.clearRoomCache();
     }
   }
 }
