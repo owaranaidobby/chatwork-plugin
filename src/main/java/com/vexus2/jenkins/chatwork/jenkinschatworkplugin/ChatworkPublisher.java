@@ -1,6 +1,8 @@
 package com.vexus2.jenkins.chatwork.jenkinschatworkplugin;
 
 import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.ChatworkClient;
+import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.Room;
+import com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api.RoomComparator;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
@@ -10,6 +12,7 @@ import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
+import hudson.util.ListBoxModel;
 import hudson.util.VariableResolver;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -17,8 +20,12 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChatworkPublisher extends Publisher {
@@ -158,7 +165,7 @@ public class ChatworkPublisher extends Publisher {
     }
 
     try {
-      ChatworkClient chatworkClient = new ChatworkClient(getDescriptor().getApikey(), getDescriptor().getProxysv(), getDescriptor().getProxyport());
+      ChatworkClient chatworkClient = getDescriptor().getChatworkClient();
       chatworkClient.sendMessage(resolveRoomId(), message);
 
       return true;
@@ -383,6 +390,28 @@ public class ChatworkPublisher extends Publisher {
         return getGlobalAbortedMessage();
       }
       return "";
+    }
+
+    public ListBoxModel doFillRidItems() throws IOException {
+      ChatworkClient chatworkClient = getChatworkClient();
+      List<Room> rooms = chatworkClient.getCachedRooms();
+      Collections.sort(rooms, new RoomComparator());
+
+      ListBoxModel items = new ListBoxModel();
+
+      for (Room room : rooms) {
+        String displayName = "[" + room.type + "] " + room.name;
+        items.add(displayName, room.roomId);
+      }
+      return items;
+    }
+
+    private ChatworkClient getChatworkClient() {
+      return new ChatworkClient(apikey, proxysv, proxyport);
+    }
+
+    public void doClearCache(StaplerRequest req, StaplerResponse rsp){
+      ChatworkClient.clearRoomCache();
     }
   }
 }

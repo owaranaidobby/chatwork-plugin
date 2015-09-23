@@ -3,11 +3,17 @@ package com.vexus2.jenkins.chatwork.jenkinschatworkplugin.api;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.ProxyHost;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChatworkClient {
@@ -18,6 +24,8 @@ public class ChatworkClient {
   private final String proxyPort;
 
   private static final String API_URL = "https://api.chatwork.com/v1";
+
+  private static CachedResponse<List<Room>> CACHED_ROOMS = new CachedResponse<List<Room>>();
 
   private final HttpClient httpClient = new HttpClient();
 
@@ -35,6 +43,25 @@ public class ChatworkClient {
     Map<String, String> params = new HashMap<String, String>();
     params.put("body", message);
     post("/rooms/" + roomId + "/messages", params);
+  }
+
+  public List<Room> getRooms() throws IOException {
+    String json = get("/rooms");
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.readValue(json, new TypeReference<List<Room>>() {});
+  }
+
+  public List<Room> getCachedRooms() throws IOException {
+    return CACHED_ROOMS.fetch(new CachedResponse.Callback<List<Room>>() {
+      @Override
+      public List<Room> get() throws IOException {
+        return getRooms();
+      }
+    });
+  }
+
+  public static void clearRoomCache(){
+    CACHED_ROOMS.clear();
   }
 
   private void post(String path, Map<String, String> params) throws IOException {
@@ -61,6 +88,34 @@ public class ChatworkClient {
         String response = method.getResponseBodyAsString();
         throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + statusCode + ", message =" + response);
       }
+
+    } finally {
+      method.releaseConnection();
+    }
+  }
+
+  private String get(String path) throws IOException {
+    if (StringUtils.isEmpty(apiKey)) {
+      throw new IllegalArgumentException("API Key is empty");
+    }
+
+    GetMethod method = new GetMethod(API_URL + path);
+
+    try {
+      method.addRequestHeader("X-ChatWorkToken", apiKey);
+
+      if(isEnabledProxy()){
+        setProxyHost(proxySv, Integer.parseInt(proxyPort));
+      }
+
+      int statusCode = httpClient.executeMethod(method);
+
+      if (statusCode != HttpStatus.SC_OK) {
+        String response = method.getResponseBodyAsString();
+        throw new ChatworkException("Response is not valid. Check your API Key or Chatwork API status. response_code = " + statusCode + ", message =" + response);
+      }
+
+      return method.getResponseBodyAsString();
 
     } finally {
       method.releaseConnection();
