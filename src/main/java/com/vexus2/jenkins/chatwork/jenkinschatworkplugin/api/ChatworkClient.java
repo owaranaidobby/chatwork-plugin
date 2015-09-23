@@ -6,12 +6,10 @@ import org.apache.commons.httpclient.ProxyHost;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +23,15 @@ public class ChatworkClient {
 
   private static final String API_URL = "https://api.chatwork.com/v1";
 
-  private static CachedResponse<List<Room>> CACHED_ROOMS = new CachedResponse<List<Room>>();
+  private static final CachedResponse<List<Room>> CACHED_ROOMS = new CachedResponse<List<Room>>();
 
   private final HttpClient httpClient = new HttpClient();
 
   public ChatworkClient(String apiKey, String proxySv, String proxyPort) {
+    if (StringUtils.isBlank(apiKey)) {
+      throw new IllegalArgumentException("API Key is blank");
+    }
+
     this.apiKey = apiKey;
     this.proxySv = proxySv;
     this.proxyPort = proxyPort;
@@ -65,10 +67,6 @@ public class ChatworkClient {
   }
 
   private void post(String path, Map<String, String> params) throws IOException {
-    if (StringUtils.isEmpty(apiKey)) {
-      throw new IllegalArgumentException("API Key is empty");
-    }
-
     PostMethod method = new PostMethod(API_URL + path);
 
     try {
@@ -95,10 +93,6 @@ public class ChatworkClient {
   }
 
   private String get(String path) throws IOException {
-    if (StringUtils.isEmpty(apiKey)) {
-      throw new IllegalArgumentException("API Key is empty");
-    }
-
     GetMethod method = new GetMethod(API_URL + path);
 
     try {
