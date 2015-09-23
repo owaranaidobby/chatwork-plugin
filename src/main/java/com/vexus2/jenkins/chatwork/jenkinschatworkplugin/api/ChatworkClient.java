@@ -23,7 +23,7 @@ public class ChatworkClient {
 
   private static final String API_URL = "https://api.chatwork.com/v1";
 
-  private static CachedResponse<List<Room>> CACHED_ROOMS = new CachedResponse<List<Room>>();
+  private static final CachedResponse<List<Room>> CACHED_ROOMS = new CachedResponse<List<Room>>();
 
   private final HttpClient httpClient = new HttpClient();
 
