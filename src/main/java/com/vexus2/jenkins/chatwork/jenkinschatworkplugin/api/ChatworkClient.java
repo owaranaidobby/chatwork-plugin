@@ -28,6 +28,10 @@ public class ChatworkClient {
   private final HttpClient httpClient = new HttpClient();
 
   public ChatworkClient(String apiKey, String proxySv, String proxyPort) {
+    if (StringUtils.isBlank(apiKey)) {
+      throw new IllegalArgumentException("API Key is blank");
+    }
+
     this.apiKey = apiKey;
     this.proxySv = proxySv;
     this.proxyPort = proxyPort;
@@ -63,10 +67,6 @@ public class ChatworkClient {
   }
 
   private void post(String path, Map<String, String> params) throws IOException {
-    if (StringUtils.isEmpty(apiKey)) {
-      throw new IllegalArgumentException("API Key is empty");
-    }
-
     PostMethod method = new PostMethod(API_URL + path);
 
     try {
@@ -93,10 +93,6 @@ public class ChatworkClient {
   }
 
   private String get(String path) throws IOException {
-    if (StringUtils.isEmpty(apiKey)) {
-      throw new IllegalArgumentException("API Key is empty");
-    }
-
     GetMethod method = new GetMethod(API_URL + path);
 
     try {
