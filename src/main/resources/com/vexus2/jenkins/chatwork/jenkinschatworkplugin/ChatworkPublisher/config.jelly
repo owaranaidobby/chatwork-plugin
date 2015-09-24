@@ -2,6 +2,53 @@
   xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <f:entry field="rid" title="Choose room you want to notice">
     <f:select />
+
+    <f:radio name="roomType" title="all"    value="all"    onclick="ChatworkPublisher.resetNarrowDown()" checked="true"/>
+    <f:radio name="roomType" title="direct" value="direct" onclick="ChatworkPublisher.narrowDown('direct')" />
+    <f:radio name="roomType" title="group"  value="group"  onclick="ChatworkPublisher.narrowDown('group')" />
+    <f:radio name="roomType" title="my"     value="my"     onclick="ChatworkPublisher.narrowDown('my')" />
+
+    <script>
+      var ChatworkPublisher = {
+        resetNarrowDown: function(){
+          var select = ChatworkPublisher.roomIdSelect();
+          if(!select){
+            return;
+          }
+          for(var i = 0; i != select.options.length; i++){
+            var option = select.options[i];
+            option.style.removeProperty("display");
+          }
+        },
+        narrowDown: function(type){
+          var select = ChatworkPublisher.roomIdSelect();
+          if(!select){
+            return;
+          }
+          var prefix = "[" + type + "]";
+          for(var i = 0; i != select.options.length; i++){
+            var option = select.options[i];
+            if(option.innerText.startsWith(prefix)){
+              option.style.removeProperty("display");
+            } else {
+              option.style.display = "none";
+            }
+          }
+        },
+        roomIdSelect: function(){
+          var fillpath = "com.vexus2.jenkins.chatwork.jenkinschatworkplugin.ChatworkPublisher/fillRidItems";
+          var selects = document.getElementsByTagName("select");
+          for(var i = 0; i != selects.length; i++){
+            var fillurl = selects[i].getAttribute("fillurl") || "";
+            if(fillurl.endsWith(fillpath)){
+              return selects[i];
+            }
+          }
+          return null;
+        }
+      };
+    </script>
+
   </f:entry>
 
   <f:entry title="Success message" field="successMessage"
