@@ -406,6 +406,19 @@ public class ChatworkPublisher extends Publisher {
       return items;
     }
 
+    public String defaultRid() throws IOException{
+      ChatworkClient chatworkClient = getChatworkClient();
+      List<Room> rooms = chatworkClient.getCachedRooms();
+
+      // return my chat room id
+      for(Room room : rooms){
+        if(StringUtils.equals(room.type, "my")){
+          return room.roomId;
+        }
+      }
+      return "";
+    }
+
     private ChatworkClient getChatworkClient() {
       return new ChatworkClient(apikey, proxysv, proxyport);
     }

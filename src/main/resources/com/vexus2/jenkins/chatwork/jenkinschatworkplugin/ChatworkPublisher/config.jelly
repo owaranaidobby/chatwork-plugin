@@ -1,7 +1,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
   xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <f:entry field="rid" title="Choose room you want to notice">
-    <f:select />
+    <f:select default="${descriptor.defaultRid()}"/>
 
     <f:radio name="roomType" title="all"    value="all"    onclick="ChatworkPublisher.resetNarrowDown()" checked="true"/>
     <f:radio name="roomType" title="direct" value="direct" onclick="ChatworkPublisher.narrowDown('direct')" />
