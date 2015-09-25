@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChatworkPublisher extends Publisher {
   private static final int MAX_COMMIT_MESSAGE_LENGTH = 50;
@@ -300,6 +302,7 @@ public class ChatworkPublisher extends Publisher {
   @Extension
   // This indicates to Jenkins that this is an implementation of an extension point.
   public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+    private static final Logger LOGGER = Logger.getLogger(DescriptorImpl.class.getName());
 
     private String apikey;
 
@@ -393,29 +396,41 @@ public class ChatworkPublisher extends Publisher {
     }
 
     public ListBoxModel doFillRidItems() throws IOException {
-      ChatworkClient chatworkClient = getChatworkClient();
-      List<Room> rooms = chatworkClient.getCachedRooms();
-      Collections.sort(rooms, new RoomComparator());
-
       ListBoxModel items = new ListBoxModel();
 
-      for (Room room : rooms) {
-        String displayName = "[" + room.type + "] " + room.name;
-        items.add(displayName, room.roomId);
+      try {
+        ChatworkClient chatworkClient = getChatworkClient();
+        List<Room> rooms = chatworkClient.getCachedRooms();
+        Collections.sort(rooms, new RoomComparator());
+
+        for (Room room : rooms) {
+          String displayName = "[" + room.type + "] " + room.name;
+          items.add(displayName, room.roomId);
+        }
+      } catch (IllegalArgumentException e){
+        // apiToken is blank
+        LOGGER.log(Level.WARNING, "Can not get rooms",e);
       }
+
       return items;
     }
 
     public String defaultRid() throws IOException{
-      ChatworkClient chatworkClient = getChatworkClient();
-      List<Room> rooms = chatworkClient.getCachedRooms();
+      try {
+        ChatworkClient chatworkClient = getChatworkClient();
+        List<Room> rooms = chatworkClient.getCachedRooms();
 
-      // return my chat room id
-      for(Room room : rooms){
-        if(StringUtils.equals(room.type, "my")){
-          return room.roomId;
+        // return my chat room id
+        for(Room room : rooms){
+          if(StringUtils.equals(room.type, "my")){
+            return room.roomId;
+          }
         }
+      } catch (IllegalArgumentException e){
+        // apiToken is blank
+        LOGGER.log(Level.WARNING, "Can not get rooms",e);
       }
+
       return "";
     }
 
