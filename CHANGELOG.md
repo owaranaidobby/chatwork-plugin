@@ -1,5 +1,12 @@
 # Change Log
 
+## [chatwork-1.0.2](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-1.0.2) (2015/09/25)
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-1.0.1...chatwork-1.0.2)
+
+**Merged pull requests:**
+
+- Remove legacy help [\#26](https://github.com/jenkinsci/chatwork-plugin/pull/26) ([sue445](https://github.com/sue445))
+
 ## [chatwork-1.0.1](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-1.0.1) (2015/09/25)
 [Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-1.0.0...chatwork-1.0.1)
 
