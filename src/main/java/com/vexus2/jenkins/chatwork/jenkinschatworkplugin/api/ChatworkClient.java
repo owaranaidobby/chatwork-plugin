@@ -71,6 +71,7 @@ public class ChatworkClient {
 
     try {
       method.addRequestHeader("X-ChatWorkToken", apiKey);
+      method.addRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
 
       for(Map.Entry<String, String> entry : params.entrySet()) {
         method.setParameter(entry.getKey(), entry.getValue());
