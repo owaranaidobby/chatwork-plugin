@@ -1,5 +1,16 @@
 # Change Log
 
+## [chatwork-1.0.3](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-1.0.3) (2015/10/07)
+[Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-1.0.2...chatwork-1.0.3)
+
+**Fixed bugs:**
+
+- multibyte garbled [\#27](https://github.com/jenkinsci/chatwork-plugin/issues/27)
+
+**Merged pull requests:**
+
+- Fix multibyte garbled [\#28](https://github.com/jenkinsci/chatwork-plugin/pull/28) ([sue445](https://github.com/sue445))
+
 ## [chatwork-1.0.2](https://github.com/jenkinsci/chatwork-plugin/tree/chatwork-1.0.2) (2015/09/25)
 [Full Changelog](https://github.com/jenkinsci/chatwork-plugin/compare/chatwork-1.0.1...chatwork-1.0.2)
 
