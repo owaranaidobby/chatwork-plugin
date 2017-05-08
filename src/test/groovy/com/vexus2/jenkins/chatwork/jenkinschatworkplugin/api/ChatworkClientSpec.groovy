@@ -17,7 +17,7 @@ import spock.lang.Unroll
 @RunWith(Enclosed)
 class ChatworkClientSpec{
   static class sendMessage extends Specification {
-    static final String TAPE_NAME = "ChatWork_v1_POST_rooms_messages"
+    static final String TAPE_NAME = "ChatWork_v2_POST_rooms_messages"
 
     ChatworkClient client
 
@@ -42,7 +42,7 @@ class ChatworkClientSpec{
 
     @Ignore
     @Betamax(tape=ChatworkClientSpec.sendMessage.TAPE_NAME, mode = TapeMode.WRITE_ONLY, match = [MatchRule.host, MatchRule.path])
-    def "call ChatWork API and save response to src/test/resources/betamax/tapes/ChatWork_v1_POST_rooms_messages.yaml"(){
+    def "call ChatWork API and save response to src/test/resources/betamax/tapes/ChatWork_v2_POST_rooms_messages.yaml"(){
       expect:
       // TODO: If you want to use, set your actual apiKey and roomId
       client.sendMessage(roomId, "testMessage")
@@ -75,7 +75,7 @@ class ChatworkClientSpec{
   }
 
   static class getRooms extends Specification {
-    static final String TAPE_NAME = "ChatWork_v1_GET_rooms"
+    static final String TAPE_NAME = "ChatWork_v2_GET_rooms"
 
     ChatworkClient client
 
@@ -108,7 +108,7 @@ class ChatworkClientSpec{
 
     @Ignore
     @Betamax(tape=ChatworkClientSpec.getRooms.TAPE_NAME, mode = TapeMode.WRITE_ONLY, match = [MatchRule.host, MatchRule.path])
-    def "call ChatWork API and save response to src/test/resources/betamax/tapes/ChatWork_v1_GET_rooms.yaml"(){
+    def "call ChatWork API and save response to src/test/resources/betamax/tapes/ChatWork_v2_GET_rooms.yaml"(){
       expect:
       // TODO: If you want to use, set your actual apiKey and roomId
       client.getRooms()

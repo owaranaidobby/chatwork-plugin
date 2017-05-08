@@ -1,10 +1,10 @@
 !tape
-name: ChatWork_v1_GET_rooms
+name: ChatWork_v2_GET_rooms
 interactions:
 - recorded: 2015-08-18T16:17:58.140Z
   request:
     method: GET
-    uri: https://api.chatwork.com/v1/rooms
+    uri: https://api.chatwork.com/v2/rooms
     headers:
       Host: api.chatwork.com
       User-Agent: Jakarta Commons-HttpClient/3.1
